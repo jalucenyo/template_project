@@ -1,0 +1,36 @@
+version: '3.7'
+networks:
+  devnet:
+    external: true
+
+services:
+  keycloak_postgres:
+    image: postgres
+    container_name: keycloak_postgres
+    networks:
+      - devnet
+    volumes:
+      - ./data/keycloak-postgress:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=keycloak
+      - POSTGRES_PASSWORD=password
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    environment:
+      - DB_VENDOR=POSTGRES
+      - DB_ADDR=keycloak_postgres
+      - DB_DATABASE=keycloak
+      - DB_USER=keycloak
+      - DB_SCHEMA=public
+      - DB_PASSWORD=password
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+    ports:
+      - 8080:8080
+    depends_on:
+      - keycloak_postgres
+    networks:
+      - devnet
