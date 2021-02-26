@@ -35,4 +35,3 @@ build/
 ## Work folders and files ##
 data/
 docker-compose.yml
-config/config.json
